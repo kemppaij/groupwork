@@ -6,7 +6,7 @@ conn = None
 def connectDB():
     """Connect to the PostgreSQL database server."""    
     try:
-        params = config()
+        params = config('src/database.ini')
         conn = psycopg2.connect(**params)
         print(f"Connection is successful to database: {params['database']}")        
         return conn
