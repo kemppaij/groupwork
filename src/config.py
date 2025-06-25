@@ -1,4 +1,7 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def config():
     return {
@@ -9,3 +12,6 @@ def config():
         'password': os.environ.get('DB_PASSWORD'),
         'connect_timeout': os.environ.get('DB_CONNECT_TIMEOUT', 5)
     }
+
+if __name__ == "__main__":
+    print(config())
