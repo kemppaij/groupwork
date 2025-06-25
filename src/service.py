@@ -45,8 +45,8 @@ def db_create_work_hours(consultant_name, customer_name, start_time, end_time, l
     try:
         con = psycopg2.connect(**config())
         cursor = con.cursor(cursor_factory=RealDictCursor)
-        SQL = 'INSERT INTO work_hours (consultant_name, customer_name, start_time,end_time, lunch_break) VALUES (%s, %s, %s, %s, %s);'
-        cursor.execute(SQL, (consultant_name, customer_name, start_time,end_time, lunch_break))
+        SQL = 'INSERT INTO work_hours (consultant_name, customer_name, start_time, end_time, lunch_break) VALUES (%s, %s, %s, %s, %s);'
+        cursor.execute(SQL, (consultant_name, customer_name, start_time, end_time, lunch_break))
         con.commit()
         result = {"success": "work period created for: %s " % consultant_name}
         cursor.close()
