@@ -17,7 +17,7 @@ def db_get_work_hours():
         cursor.execute(SQL)
         data = cursor.fetchall()
         cursor.close()
-        return json.dumps({"work_hours": data})
+        return json.dumps({"work_hours": data}, default=str)
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
