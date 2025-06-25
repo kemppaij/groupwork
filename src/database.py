@@ -2,7 +2,7 @@ import psycopg2
 from config import config
 
 def get_connection(dbname=None):
-    params = config()
+    params = config('src/database.ini')
     if dbname:
         params['database'] = dbname
     conn = psycopg2.connect(**params)
