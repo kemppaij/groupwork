@@ -24,8 +24,6 @@ def db_get_work_hours():
         if con is not None:
             con.close()
 
-db_get_work_hours()
-
 def db_get_work_hours_by_id(id):
     con = None
     try:
