@@ -3,7 +3,8 @@ from service import (db_get_work_hours,
                      db_get_work_hours_by_id,
                      db_create_work_hours,
                      db_update_work_hours, 
-                     db_delete_work_hours)
+                     db_delete_work_hours,
+                     db_validate_work_hours)
 app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
@@ -28,31 +29,24 @@ def get_work_hours_by_id(id):
 
 @app.route("/work_period", methods=['POST'])
 def create_work_hours():
-    try: 
-        data = request.get_json()
-        start_time = data['start_time']
-        end_time = data['end_time']
-        lunch_break = data['lunch_break']
-        consultant_name = data['consultant_name']
-        customer_name = data['customer_name']
-        db_create_work_hours(consultant_name, customer_name, start_time,end_time, lunch_break)
-        return {"success": "work period created for: %s" % consultant_name}
-    except:
-        return {"error": "error creating work period"}
+    data = request.get_json()
+    is_valid, result, status = db_validate_work_hours(data)
+    if not is_valid:
+        return result, status
+    db_create_work_hours(result["consultant_name"], result["customer_name"],
+                         result["start_time"], result["end_time"], result["lunch_break"])
+    return {"success": "work period created for: %s" % result["consultant_name"]}
 
 @app.route("/work_period/<int:id>", methods=['PUT'])
 def update_work_hours(id):
-    try:
-        data = request.get_json()
-        start_time = data['start_time']
-        end_time = data['end_time']
-        lunch_break = data['lunch_break']
-        consultant_name = data['consultant_name']
-        customer_name = data['customer_name']
-        db_update_work_hours(id, consultant_name, customer_name, start_time, end_time, lunch_break)
-        return {"success": "updated work hours"}
-    except:
-        return {"error": "error updating work hours"}
+    data = request.get_json()
+    is_valid, result, status = db_validate_work_hours(data)
+    if not is_valid:
+        return result, status
+    db_update_work_hours(id, result["consultant_name"], result["customer_name"],
+                         result["start_time"], result["end_time"], result["lunch_break"])
+    return {"success": "updated work hours"}
+
 
 @app.route('/work_period/<int:id>', methods=['DELETE'])
 def delete_work_hours(id):
