@@ -1,9 +1,17 @@
-from configparser import ConfigParser
 import os
+from dotenv import load_dotenv
 
-def config(filename=None, section='postgresql'):
-    if filename is None:
-        filename = os.path.join(os.path.dirname(__file__), 'database.ini')
-    parser = ConfigParser()
-    parser.read(filename)
-    return dict(parser.items(section))
+load_dotenv()
+
+def config():
+    return {
+        'host': os.environ.get('DB_HOST'),
+        'database': os.environ.get('DB_NAME'),
+        'port': os.environ.get('DB_PORT'),
+        'user': os.environ.get('DB_USER'),
+        'password': os.environ.get('DB_PASSWORD'),
+        'connect_timeout': os.environ.get('DB_CONNECT_TIMEOUT', 5)
+    }
+
+if __name__ == "__main__":
+    print(config())
