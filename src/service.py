@@ -65,11 +65,19 @@ def db_update_work_hours(id, consultant_name, customer_name, start_time, end_tim
     try:
         con = psycopg2.connect(**config())
         cursor = con.cursor(cursor_factory=RealDictCursor)
-        SQL = 'UPDATE person SET consultant_name = %s, customer_name = %s, start_time = %s, end_time = %s, lunch_break = %s WHERE id = %s;'
+        SQL = '''
+            UPDATE work_hours
+            SET consultant_name = %s,
+                customer_name = %s,
+                start_time = %s,
+                end_time = %s,
+                lunch_break = %s
+            WHERE id = %s;
+        '''
         cursor.execute(SQL, (consultant_name, customer_name, start_time, end_time, lunch_break, id))
         con.commit()
         cursor.close()
-        result = {"success": "work_hours updated for consultant id: %s " % id}
+        result = {"success": f"work_hours updated for consultant id: {id}"}
         return json.dumps(result)
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
