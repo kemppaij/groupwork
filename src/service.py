@@ -33,12 +33,14 @@ def db_get_work_hours_by_id(id):
         cursor.execute(SQL, (id,))
         data = cursor.fetchall()
         cursor.close()
-        return json.dumps({"work_hours": data})
+        return json.dumps({"work_hours": data}, default=str)
     except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
+        print(error)
+        return json.dumps({"error": str(error)})
     finally:
         if con is not None:
             con.close()
+
 
 def db_create_work_hours(consultant_name, customer_name, start_time, end_time, lunch_break):
     con = None
