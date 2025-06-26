@@ -56,4 +56,4 @@ def delete_work_hours(id):
         return {"error": "no such entry"}
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0')
