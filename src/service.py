@@ -2,6 +2,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from config import config
 import json
+from datetime import datetime
 
 from functools import cache
 @cache
@@ -101,3 +102,44 @@ def db_delete_work_hours(id):
     finally:
         if con is not None:
             con.close()
+
+
+
+def db_validate_work_hours(data):
+    start_time_str = data.get('start_time')
+    end_time_str = data.get('end_time')
+    lunch_break_raw = data.get('lunch_break')  # kan vara string eller int
+    consultant_name = data.get('consultant_name')
+    customer_name = data.get('customer_name')
+
+    if not all([start_time_str, end_time_str, lunch_break_raw is not None, consultant_name, customer_name]):
+        return False, {"error": "All fields are required"}, 400
+
+    try:
+        start_time = datetime.fromisoformat(start_time_str)
+        end_time = datetime.fromisoformat(end_time_str)
+    except ValueError:
+        return False, {"error": "Invalid datetime format"}, 400
+
+    try:
+        lunch_break = int(lunch_break_raw)
+    except ValueError:
+        return False, {"error": "Lunch break must be an integer"}, 400
+
+    if start_time >= end_time:
+        return False, {"error": "End time must be after start time"}, 400
+
+    if lunch_break < 0:
+        return False, {"error": "Lunch break cannot be negative"}, 400
+
+    total_work_seconds = (end_time - start_time).total_seconds()
+    if lunch_break * 60 > total_work_seconds:
+        return False, {"error": "Lunch break exceeds total working time"}, 400
+
+    return True, {
+        "start_time": start_time,
+        "end_time": end_time,
+        "lunch_break": lunch_break,
+        "consultant_name": consultant_name,
+        "customer_name": customer_name
+    }, 200
