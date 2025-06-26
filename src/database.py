@@ -68,7 +68,8 @@ def get_daily_data():
         cur = conn.cursor()
         sql = "SELECT * FROM work_hours WHERE start_time::date = %s"
         cur.execute(sql, (today,))
-        data = cur.fetchall()
+        columns = [desc[0] for desc in cur.description]  # Get column names
+        data = [dict(zip(columns, row)) for row in cur.fetchall()]  # List of dicts
         cur.close()
         conn.close()
         return data
