@@ -29,6 +29,9 @@ def generate_daily_report(df):
 
     return "\n".join(report_lines)
 
+print("Connection string:", os.environ.get("AZURE_STORAGE_CONNECTION_STRING"))
+print("Container name:", os.environ.get("AZURE_CONTAINER_NAME"))
+
 def upload_to_blob(file_path, blob_name):
     connection_string = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
     container_name = os.environ.get("AZURE_CONTAINER_NAME")
