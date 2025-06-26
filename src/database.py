@@ -1,3 +1,4 @@
+import datetime
 import psycopg2
 from config import config
 
@@ -59,3 +60,18 @@ def create_table():
             conn.close()
     except Exception as e:
         print(f"Error connecting to database: {e}")
+
+def get_daily_data():
+    today = datetime.date.today()
+    try:
+        conn = get_connection('workhours')
+        cur = conn.cursor()
+        sql = "SELECT * FROM work_hours WHERE start_time::date = %s"
+        cur.execute(sql, (today,))
+        data = cur.fetchall()
+        cur.close()
+        conn.close()
+        return data
+    except Exception as e:
+        print(f"Error fetching daily data: {e}")
+        return []
