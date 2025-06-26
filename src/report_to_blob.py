@@ -3,6 +3,9 @@ import datetime
 import pandas as pd
 from azure.storage.blob import BlobServiceClient
 from database import get_daily_data
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def generate_daily_report(df):
     if df.empty:
@@ -48,5 +51,5 @@ if __name__ == "__main__":
         f.write(report)
     print(f"Report written to {report_file}")
     
-    # upload_to_blob(report_file, report_file)
-    # print("Report generated and uploaded.")
+    upload_to_blob(report_file, report_file)
+    print("Report generated and uploaded.")
