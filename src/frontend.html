@@ -1,141 +1,191 @@
-<!-- Save as frontend.html in your project root or /src folder -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Work Hours CRUD</title>
-    <style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
+      font-family: 'Inter', 'Roboto', sans-serif;
+      background: linear-gradient(120deg, #F4F7FA, #E9EFF5);
       margin: 0;
       padding: 40px;
+      color: #1A1A1A;
     }
     h1 {
-      color: #333;
-      margin-bottom: 20px;
+      font-size: 2.6rem;
+      font-weight: 600;
+      color: #183B56;
+      margin-bottom: 30px;
+    }
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #2C3E50;
+      margin-bottom: 12px;
+    }
+    .grid-layout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 36px;
     }
     form, .section {
-      background: #fff;
-      padding: 18px 24px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-      margin-bottom: 24px;
-      max-width: 400px;
+      background: #FFFFFF;
+      padding: 28px;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+      transition: box-shadow 0.3s ease-in-out;
     }
-    label, input {
+    form:hover, .section:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+    label {
+      font-weight: 500;
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
+      color: #34495E;
     }
-    input[type="number"], input[type="datetime-local"], input[type="text"] {
+    input[type="text"],
+    input[type="number"],
+    input[type="datetime-local"] {
       width: 100%;
-      padding: 6px 8px;
-      margin-bottom: 12px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      border: 1px solid #CCD6DD;
+      border-radius: 6px;
+      background: #F9FCFF;
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.95rem;
+    }
+    input:focus {
+      outline: none;
+      border-color: #1976D2;
+      background: #fff;
     }
     button {
-      background: #007bff;
-      color: #fff;
+      background: linear-gradient(to right, #1976D2, #0D47A1);
+      color: white;
+      padding: 12px 24px;
       border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1rem;
       cursor: pointer;
-      margin-top: 6px;
+      transition: background 0.3s ease-in-out;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
     button:hover {
-      background: #0056b3;
+      background: linear-gradient(to right, #1565C0, #0B3C91);
     }
     pre {
-      background: #f0f0f0;
-      padding: 10px;
-      border-radius: 4px;
-      max-width: 600px;
+      background: #F0F4F8;
+      padding: 18px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      max-height: 300px;
       overflow-x: auto;
-    }
-    #createResult, #deleteResult, #byId {
-      margin-top: 10px;
-      color: #007bff;
     }
     .inline-group {
       display: flex;
-      gap: 8px;
       align-items: center;
-      margin-bottom: 12px;
+      gap: 12px;
+      margin-bottom: 14px;
     }
     #getId, #deleteId {
-        width: 50px;
-
+      width: 80px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    #createResult, #deleteResult, #byId {
+      margin-top: 10px;
+      color: #1565C0;
+      font-weight: 500;
+    }
+    @media (max-width: 600px) {
+      .grid-layout {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
   <h1>Work Hours CRUD</h1>
-
-  <h2>Create Work Period</h2>
-  <form id="createForm">
-    Consultant: <input name="consultant_name" required><br>
-    Customer: <input name="customer_name" required><br>
-    Start Time: <input name="start_time" type="datetime-local" required><br>
-    End Time: <input name="end_time" type="datetime-local" required><br>
-    Lunch Break (minutes): <input name="lunch_break" type="number" required><br>
-    <button type="submit">Create</button>
-  </form>
-  <div id="createResult"></div>
-
-  <h2>All Work Periods</h2>
-  <button onclick="fetchAll()">Refresh</button>
-  <pre id="allData"></pre>
-
-  <h2>Get by ID</h2>
-  <input id="getId" type="number" placeholder="ID">
-  <button onclick="fetchById()">Get</button>
-  <pre id="byId"></pre>
-
-  <h2>Delete by ID</h2>
-  <input id="deleteId" type="number" placeholder="ID">
-  <button onclick="deleteById()">Delete</button>
-  <pre id="deleteResult"></pre>
-
+  <div class="grid-layout">
+    <form id="createForm">
+      <h2>Create Work Period</h2>
+      <label>Consultant:</label>
+      <input name="consultant_name" required>
+      <label>Customer:</label>
+      <input name="customer_name" required>
+      <label>Start Time:</label>
+      <input name="start_time" type="datetime-local" required>
+      <label>End Time:</label>
+      <input name="end_time" type="datetime-local" required>
+      <label>Lunch Break (minutes):</label>
+      <input name="lunch_break" type="number" required>
+      <button type="submit">Create</button>
+      <div id="createResult"></div>
+    </form>
+    <div class="section">
+      <h2>All Work Periods</h2>
+      <button onclick="fetchAll()">Refresh</button>
+      <pre id="allData"></pre>
+    </div>
+    <div class="section">
+      <h2>Get by ID</h2>
+      <div class="inline-group">
+        <input id="getId" type="number" placeholder="ID">
+        <button onclick="fetchById()">Get</button>
+      </div>
+      <pre id="byId"></pre>
+    </div>
+    <div class="section">
+      <h2>Delete by ID</h2>
+      <div class="inline-group">
+        <input id="deleteId" type="number" placeholder="ID">
+        <button onclick="deleteById()">Delete</button>
+      </div>
+      <pre id="deleteResult"></pre>
+    </div>
+  </div>
   <script>
     const api = "http://127.0.0.1:5000/work_period";
-
-function padTime(val) {
-  return val.length === 16 ? val + ":00" : val;
-}
-
-document.getElementById('createForm').onsubmit = async function(e) {
-  e.preventDefault();
-  const form = e.target;
-  const data = {
-    consultant_name: form.consultant_name.value,
-    customer_name: form.customer_name.value,
-    start_time: padTime(form.start_time.value),
-    end_time: padTime(form.end_time.value),
-    lunch_break: form.lunch_break.value
-  };
-  console.log(data); // Debug: see what is sent
-  const res = await fetch(api, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(data)
-  });
-  document.getElementById('createResult').textContent = await res.text();
-  fetchAll();
-};
-
+    function padTime(val) {
+      return val.length === 16 ? val + ":00" : val;
+    }
+    document.getElementById('createForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        consultant_name: form.consultant_name.value,
+        customer_name: form.customer_name.value,
+        start_time: padTime(form.start_time.value),
+        end_time: padTime(form.end_time.value),
+        lunch_break: form.lunch_break.value
+      };
+      const res = await fetch(api, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+      });
+      document.getElementById('createResult').textContent = await res.text();
+      fetchAll();
+    };
     async function fetchAll() {
       const res = await fetch(api);
       document.getElementById('allData').textContent = await res.text();
     }
-
     async function fetchById() {
       const id = document.getElementById('getId').value;
       if (!id) return;
       const res = await fetch(`${api}/${id}`);
       document.getElementById('byId').textContent = await res.text();
     }
-
     async function deleteById() {
       const id = document.getElementById('deleteId').value;
       if (!id) return;
@@ -143,8 +193,6 @@ document.getElementById('createForm').onsubmit = async function(e) {
       document.getElementById('deleteResult').textContent = await res.text();
       fetchAll();
     }
-
-    // Initial load
     fetchAll();
   </script>
 </body>
