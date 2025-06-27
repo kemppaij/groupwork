@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+load_dotenv()
+
 def generate_daily_report(df, today_str):
     if df.empty:
         return "No data available for the report."
@@ -35,6 +37,9 @@ def generate_daily_report(df, today_str):
 
     return "\n".join(report_lines)
 
+print("Connection string:", os.environ.get("AZURE_STORAGE_CONNECTION_STRING"))
+print("Container name:", os.environ.get("AZURE_CONTAINER_NAME"))
+
 def upload_to_blob(file_path, blob_name):
     connection_string = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
     container_name = os.environ.get("AZURE_CONTAINER_NAME")
@@ -57,6 +62,7 @@ if __name__ == "__main__":
 
     with open(file_name, "w") as f:
         f.write(report)
+
     print(f"Report written to {file_name}")
 
     upload_to_blob(file_name, file_name)
