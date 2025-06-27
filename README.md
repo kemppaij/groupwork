@@ -1,5 +1,5 @@
 # Time reporting application
-This repository contains the collaborative work of **Team 2** for our group assignment. The project involves the setup, development, and automation of a cloud-based reporting application using Azure infrastructure, VIM, and a backend API connected to a database. 
+This repository contains the collaborative work of **Team 2** for our group assignment. The project involves the setup, development, and automation of a cloud-based reporting application using Azure infrastructure, VIM, a backend API connected to a database and a basic frontend interface.
 
 ---
 
