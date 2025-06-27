@@ -1,0 +1,151 @@
+<!-- Save as frontend.html in your project root or /src folder -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Work Hours CRUD</title>
+    <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 40px;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    form, .section {
+      background: #fff;
+      padding: 18px 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      margin-bottom: 24px;
+      max-width: 400px;
+    }
+    label, input {
+      display: block;
+      margin-bottom: 8px;
+    }
+    input[type="number"], input[type="datetime-local"], input[type="text"] {
+      width: 100%;
+      padding: 6px 8px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    pre {
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 4px;
+      max-width: 600px;
+      overflow-x: auto;
+    }
+    #createResult, #deleteResult, #byId {
+      margin-top: 10px;
+      color: #007bff;
+    }
+    .inline-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    #getId, #deleteId {
+        width: 50px;
+
+    }
+  </style>
+</head>
+<body>
+  <h1>Work Hours CRUD</h1>
+
+  <h2>Create Work Period</h2>
+  <form id="createForm">
+    Consultant: <input name="consultant_name" required><br>
+    Customer: <input name="customer_name" required><br>
+    Start Time: <input name="start_time" type="datetime-local" required><br>
+    End Time: <input name="end_time" type="datetime-local" required><br>
+    Lunch Break (minutes): <input name="lunch_break" type="number" required><br>
+    <button type="submit">Create</button>
+  </form>
+  <div id="createResult"></div>
+
+  <h2>All Work Periods</h2>
+  <button onclick="fetchAll()">Refresh</button>
+  <pre id="allData"></pre>
+
+  <h2>Get by ID</h2>
+  <input id="getId" type="number" placeholder="ID">
+  <button onclick="fetchById()">Get</button>
+  <pre id="byId"></pre>
+
+  <h2>Delete by ID</h2>
+  <input id="deleteId" type="number" placeholder="ID">
+  <button onclick="deleteById()">Delete</button>
+  <pre id="deleteResult"></pre>
+
+  <script>
+    const api = "http://127.0.0.1:5000/work_period";
+
+function padTime(val) {
+  return val.length === 16 ? val + ":00" : val;
+}
+
+document.getElementById('createForm').onsubmit = async function(e) {
+  e.preventDefault();
+  const form = e.target;
+  const data = {
+    consultant_name: form.consultant_name.value,
+    customer_name: form.customer_name.value,
+    start_time: padTime(form.start_time.value),
+    end_time: padTime(form.end_time.value),
+    lunch_break: form.lunch_break.value
+  };
+  console.log(data); // Debug: see what is sent
+  const res = await fetch(api, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data)
+  });
+  document.getElementById('createResult').textContent = await res.text();
+  fetchAll();
+};
+
+    async function fetchAll() {
+      const res = await fetch(api);
+      document.getElementById('allData').textContent = await res.text();
+    }
+
+    async function fetchById() {
+      const id = document.getElementById('getId').value;
+      if (!id) return;
+      const res = await fetch(`${api}/${id}`);
+      document.getElementById('byId').textContent = await res.text();
+    }
+
+    async function deleteById() {
+      const id = document.getElementById('deleteId').value;
+      if (!id) return;
+      const res = await fetch(`${api}/${id}`, {method: "DELETE"});
+      document.getElementById('deleteResult').textContent = await res.text();
+      fetchAll();
+    }
+
+    // Initial load
+    fetchAll();
+  </script>
+</body>
+</html>

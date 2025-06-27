@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_cors import CORS
 from service import (db_get_work_hours, 
                      db_get_work_hours_by_id,
                      db_create_work_hours,
@@ -6,6 +7,7 @@ from service import (db_get_work_hours,
                      db_delete_work_hours,
                      db_validate_work_hours)
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/", methods=["GET"])
 def index():
@@ -30,6 +32,7 @@ def get_work_hours_by_id(id):
 @app.route("/work_period", methods=['POST'])
 def create_work_hours():
     data = request.get_json()
+    
     is_valid, result, status = db_validate_work_hours(data)
     if not is_valid:
         return result, status
