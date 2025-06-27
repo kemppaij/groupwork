@@ -11,9 +11,14 @@
 6) Make sure that everyone was connected to database.
 7) Create tables for the database (with error handling)
 8) Create API and service 
+- Create and test CURD methods
 9) Create reporting software
+- Create method to fetch daily working hours from database 
+- Convert to dataframe for easier processing
+- Create nice-looking text file and upload to blob storage.
 10) Upload to storage blob
-11) Create methods to write inputs into database.
-12) Create additional table (method to calculate work hours, starttime,endtime,lunchbreak)
+- Confirm that text file was indeed uploaded.
+11) Create date validations (for when creating and updating database input)
+12) Create cron job so that a report is created and uploaded once a day.
 13) Expand db connection solution (Azure key vault instead of database.ini)
 14) Expand interface
